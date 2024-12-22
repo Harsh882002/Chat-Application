@@ -5,8 +5,6 @@ export const generateToken = (userId,res) =>{
         expiresIn:"7d"
     })
 
-
-
 res.cookie("jwt",token,{
     maxAge : 7*24*60*1000,  //MS
     httpOnly : true,  // Prevent XSS attacks cross-site scripting attacks 
