@@ -1,39 +1,39 @@
-import User from "../models/user.model.js"
+import User from "../models/user.model.js";
+import bcrypt from "bcrypt";
 
-export const signup = async(req,res) =>{
-    const {fullName, email, password} = req.body;
-    try{
+export const signup = async (req, res) => {
+  const { fullName, email, password } = req.body;
+  try {
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at leat 6 characters " });
+    }
 
-        if(password.length < 6){
-            return res.status(400).json({message: "Password must be at leat 6 characters "});
-        }
+    const user = await User.findOne({ email });
 
-        const user = await User.findOne({email});
+    if (user) return res.status(400).json({ message: "Email Already Exists " });
 
-        if(user) return res.status(400).json({message:"Email Already Exists "});
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-     }catch(error){
+    const newUser = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+    });
 
-     }
+    if (newUser) {   
+    } else {
+      res.status(400).json({ message: "Invalid   User Data " });
+    }
+  } catch (error) {}
 };
 
+export const login = (req, res) => {
+  res.send("login route");
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-export const login = (req,res) =>{
-    res.send("login route")
-}
-
-export const logout = (req,res) =>{
-    res.send("Logout route ");
-}
+export const logout = (req, res) => {
+  res.send("Logout route ");
+};
