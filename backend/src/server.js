@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 import autoRoutes from "../routes/auth.route.js";
+import messageRoute from "../routes/message.route.js"
 import { connectDB } from "../lib/db.js";
 
 const app = express();
@@ -18,6 +19,7 @@ if (result.error) {
 }
 
 app.use("/api/auth", autoRoutes);
+app.use("/api/message", messageRoute);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, async () => {

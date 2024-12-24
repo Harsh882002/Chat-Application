@@ -5,13 +5,14 @@ import bcrypt from "bcrypt";
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
+    if (!fullName || !email || !password) {
+      res.status(400).json({ message: "All Fields Are Required.." });
+    }
 
-     if(!fullName || !email || !password){
-      res.status(400).json({message: "All Fields Are Required.."})
-     }
-    
     if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at leat 6 characters " });
+      return res
+        .status(400)
+        .json({ message: "Password must be at leat 6 characters " });
     }
 
     const user = await User.findOne({ email });
@@ -44,47 +45,73 @@ export const signup = async (req, res) => {
   } catch (error) {}
 };
 
-export const login = async(req, res) => {
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
 
-  const {email,password} = req.body;
-  try{
-    const user = await User.findOne({email});
-
-    if(!user){
-      return res.status(400).json({message: "Invalid Credentials "});
+    if (!user) {
+      return res.status(400).json({ message: "Invalid Credentials " });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password,user.password);
-    if(!isPasswordCorrect){
-      return res.staus(400).json({message: "Invalid Credentials. "});
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.staus(400).json({ message: "Invalid Credentials. " });
     }
 
-    generateToken(user._id,res);
+    generateToken(user._id, res);
 
     res.status(200).json({
       _id: user._id,
-      fullName : user.fullName,
-      email : user.email,
-      profilePic : user.profilePic
-    })
-  }catch(error){
-console.log("Error in login Controller ", error.message);
-res.status(500).json({message : "Internal Server Error "});
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("Error in login Controller ", error.message);
+    res.status(500).json({ message: "Internal Server Error " });
   }
-
 };
 
 export const logout = (req, res) => {
-   try{
-    res.cookie("jwt", "", {maxAge: 0});
-    res.status(200).json({message : "Logged Out Succeddfully "});
-
-   }catch(error){
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged Out Succeddfully " });
+  } catch (error) {
     console.log("Error in logOut Controller ", error.message);
-    res.status(500).json({message: "Internal Server Error "})
-   }
+    res.status(500).json({ message: "Internal Server Error " });
+  }
 };
 
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user._id;
 
-export const  updateProfile  = (req,res ) =>{
- }
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profle pic is required.." });
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json(updateUser);
+  } catch (error) {
+    console.log("error in update profile ", error);
+    res.status(500).json({ message: "Internal Server error " });
+  }
+};
+
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+    console.log(req.user)
+  } catch (error) {
+    console.log("Error in checkAuth controller ", error.message);
+    res.status(500). json({ message: "Internal Server Error" });
+  }
+};
