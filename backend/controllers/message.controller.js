@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 
@@ -37,3 +38,36 @@ export const getMessages = async(req,res) =>{
         res.status(500).json({error : "Internal Server error "});
     }
 }
+
+export const sendMessage = async(req,res) =>{
+  try{
+    const {text, image} = req.body;
+    const {id : receriverId} = req.params;
+    const senderId = req.user._id;
+
+    let imageurl ;
+    if(image){
+      //upload base64 image to cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(image);
+      imageurl = uploadResponse.secure_url;
+    }
+
+    const newMessage = new Message(
+      {
+        senderId,
+        receriverId,
+        text,
+        image: imageurl,
+      });
+
+      await newMessage.save();
+
+      //todo : realtime functionality goes here
+
+      res.status(201).json(newMessage);
+  }catch(error){
+
+    console.log("Error In sendMessage controller: ", error.message);
+    res.status(500).json({error : "Internal server error "});
+  }
+};
