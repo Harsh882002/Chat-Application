@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-dotenv.config();
+import cors from "cors";
+ dotenv.config();
 
 import autoRoutes from "../routes/auth.route.js";
 import messageRoute from "../routes/message.route.js"
@@ -10,7 +11,10 @@ import { connectDB } from "../lib/db.js";
 const app = express();
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser());
-
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true 
+}))
 
 const result = dotenv.config();
 
