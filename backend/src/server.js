@@ -11,10 +11,15 @@ import { connectDB } from "../lib/db.js";
 const app = express();
 app.use(express.json()); // Parse JSON request
 app.use(cookieParser());
-app.use(cors({
+
+app.use(
+  cors({
   origin: "http://localhost:5173",
-  credentials: true 
-}))
+  credentials: true, 
+}));
+
+app.use("/api/auth", autoRoutes);
+app.use("/api/message", messageRoute);
 
 const result = dotenv.config();
 
@@ -22,11 +27,11 @@ if (result.error) {
   console.log("Failed to Load .env file", result.error);
 }
 
-app.use("/api/auth", autoRoutes);
-app.use("/api/message", messageRoute);
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, async () => {
   console.log("Server is running on port: " + PORT);
   await connectDB();
 });
+
