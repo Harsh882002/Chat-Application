@@ -9,7 +9,7 @@ import messageRoute from "../routes/message.route.js"
 import { connectDB } from "../lib/db.js";
 
 const app = express();
-app.use(express.json()); // Parse JSON requests
+app.use(express.json()); // Parse JSON request
 app.use(cookieParser());
 app.use(cors({
   origin: "http://localhost:5173",
