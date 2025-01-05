@@ -1,6 +1,6 @@
 import React from 'react'
 import { useChatStore } from '../store/useChatStore'
-import { Sidebar } from 'lucide-react';
+import { Sidebar } from '../component/Sidebar';
 import { NoChatSelected } from '../component/NoChatSelected';
 import ChatContainer from '../component/ChatContainer';
 
