@@ -18,7 +18,7 @@ export const getUsersForSidebar = async (req, res) => {
 };
 
 
-export const getMessages = async(req,res) =>{
+export const getMessages = async(req,res) =>{ 
     try{
         const {id: userToChatId } =  req.params;
      const myId = req.user._id;
@@ -27,7 +27,7 @@ export const getMessages = async(req,res) =>{
         $or: [
             {senderId : myId, receiverId: userToChatId},
             {senderId: userToChatId, receiverId: myId},
-             
+
         ]
      })
 
@@ -42,7 +42,9 @@ export const getMessages = async(req,res) =>{
 export const sendMessage = async(req,res) =>{
   try{
     const {text, image} = req.body;
-    const {id : receriverId} = req.params;
+    console.log(text);
+    const {id : receverId} = req.params;
+    
     const senderId = req.user._id;
 
     let imageurl ;
@@ -55,7 +57,7 @@ export const sendMessage = async(req,res) =>{
     const newMessage = new Message(
       {
         senderId,
-        receriverId,
+        receverId,
         text,
         image: imageurl,
       });
