@@ -25,8 +25,8 @@ export const getMessages = async(req,res) =>{
 
      const messages  = await Message.find({
         $or: [
-            {senderId : myId, receiverId: userToChatId},
-            {senderId: userToChatId, receiverId: myId},
+            {senderId : myId, receverId: userToChatId},
+            {senderId: userToChatId, receverId: myId},
 
         ]
      })
@@ -42,8 +42,7 @@ export const getMessages = async(req,res) =>{
 export const sendMessage = async(req,res) =>{
   try{
     const {text, image} = req.body;
-    console.log(text);
-    const {id : receverId} = req.params;
+     const {id : receverId} = req.params;
     
     const senderId = req.user._id;
 
