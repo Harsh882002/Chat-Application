@@ -7,8 +7,8 @@ dotenv.config();
 import autoRoutes from "../routes/auth.route.js";
 import messageRoute from "../routes/message.route.js";
 import { connectDB } from "../lib/db.js";
+import { app, server } from "../lib/socket.js";
 
-const app = express();
 app.use(express.json({limit: '50mb'})); // Parse JSON request
 app.use(cookieParser());
 
@@ -28,8 +28,9 @@ if (result.error) {
   console.log("Failed to Load .env file", result.error);
 }
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, async () => {
+const PORT = process.env.PORT;
+
+server.listen(PORT, async () => {
   console.log("Server is running on port: " + PORT);
   await connectDB();
 });
