@@ -1,15 +1,17 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "author": "Harsh Patle",
   "type": "module",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "chit-chat": "file:..",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "http": "^0.0.1-security",
