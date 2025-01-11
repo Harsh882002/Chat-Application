@@ -41,7 +41,7 @@ export const Sidebar = () => {
             <span className="text-sm">Show online only</span>
           </label>
           <span className="text-xs text-zinc-500">
-            ({onlineUsers.length - 1} online)
+            ({onlineUsers.length - 1} online people)
           </span>
         </div>
       </div>
@@ -83,7 +83,7 @@ export const Sidebar = () => {
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
-          </button>
+          </button> 
         ))}
 
         {filteredUsers.length === 0 && (
